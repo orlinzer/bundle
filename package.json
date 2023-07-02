@@ -1,4 +1,5 @@
 {
+  "name": "npm-bundle",
   "author": "Or Linzer",
   "email": "orlinzer@gmail.com",
   "url": "https://github.com/orlinzer/bundle#readme",
@@ -6,7 +7,6 @@
     "url": "https://github.com/orlinzer/bundle/issues",
     "email": "orlinzer@gmail.com"
   },
-  "name": "npm-bundle",
   "version": "1.0.0",
   "description": "",
   "license": "ISC",
