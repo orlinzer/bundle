@@ -1,14 +1,20 @@
 {
-  "name": "bundle",
+  "author": "Or Linzer",
+  "email": "orlinzer@gmail.com",
+  "url": "https://github.com/orlinzer/bundle#readme",
+  "bugs": {
+    "url": "https://github.com/orlinzer/bundle/issues",
+    "email": "orlinzer@gmail.com"
+  },
+  "name": "npm-bundle",
   "version": "1.0.0",
   "description": "",
+  "license": "ISC",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "child_process": "^1.0.2",
     "fs": "^0.0.1-security",
