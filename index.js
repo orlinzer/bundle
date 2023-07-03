@@ -1,50 +1,49 @@
 
-import fs, { rmSync } from 'fs';
-import https from 'https';
-import path from 'path';
+import { mkdirSync, rmSync } from 'fs';
+import { join } from 'path';
 import { execFileSync } from 'child_process';
 import { chdir } from 'process';
 
-const BUNDLE_DIR = `bundle_${Date.now().toString()}`;
+const BUNDLE_DIR_NAME = `bundle_${Date.now().toString()}`;
 
-const tmp = execFileSync("npm", ["ls", "--json"]);
-const NpmLs = JSON.parse(tmp.toString());
+// Get the list of all dependencies with depth
+const npmListJson = execFileSync("npm", ["ls", "--json", "--all"]);
+const npmList = JSON.parse(npmListJson.toString());
 
-const download = async () => {
-    fs.mkdirSync(BUNDLE_DIR, {recursive: true});
-    chdir(BUNDLE_DIR);
-    if (NpmLs.dependencies) {
-        
-        for (const dep in NpmLs.dependencies) {
-            // console.log(NpmLs.dependencies);
+mkdirSync(BUNDLE_DIR_NAME, {recursive: true});
+chdir(BUNDLE_DIR_NAME);
 
-            if (NpmLs.dependencies[dep].resolved) {
-                console.log(`Downloading: ${NpmLs.dependencies[dep].resolved}`);
+// Download dependencies list recursive
+const download = async (dependencies) => {
+    for (const dep in dependencies) {
 
-                const depPath = dep.split('/').slice(0, dep.split('/').length - 1).join();
-                if (depPath) {
-                    fs.mkdirSync(path.join(depPath), {recursive: true});
-                    chdir(depPath);
-                }
+        if (dependencies[dep].resolved) {
+            console.log(`Downloading: ${dependencies[dep].resolved}`);
 
+            const depPath = dep.split('/').slice(0, dep.split('/').length - 1).join();
+            if (depPath) {
+                mkdirSync(join(depPath), {recursive: true});
+                chdir(depPath);
+            }
 
-                const tmp = execFileSync("npm", ["pack", NpmLs.dependencies[dep].resolved]);
+            const tmp = execFileSync("npm", ["pack", dependencies[dep].resolved]);
 
-                if (depPath) {
-                    chdir('..');
-                }
+            if (depPath) {
+                chdir('..');
             }
         }
-        
+
+        await download(dependencies[dep].dependencies);
     }
-    chdir('..');
 }
 
+await download(npmList.dependencies);
 
-await download();
+chdir('..');
 
-execFileSync("tar", ["-czvf", `${BUNDLE_DIR}.tar.gz`, BUNDLE_DIR]);
+// Comprese the bundle directory
+execFileSync("tar", ["-czvf", `${BUNDLE_DIR_NAME}.tar.gz`, BUNDLE_DIR_NAME]);
 
-rmSync(BUNDLE_DIR, {force: true, recursive: true});
+rmSync(BUNDLE_DIR_NAME, {force: true, recursive: true});
 
 console.log('Done!');
