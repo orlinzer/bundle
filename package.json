@@ -1,5 +1,6 @@
 {
   "name": "on-premise-bundle",
+  "description": "Make a bundle from an npm package for on-premise installation",
   "author": "Or Linzer",
   "email": "orlinzer@gmail.com",
   "url": "https://github.com/orlinzer/bundle#readme",
@@ -7,11 +8,13 @@
     "url": "https://github.com/orlinzer/bundle/issues",
     "email": "orlinzer@gmail.com"
   },
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.3",
   "license": "ISC",
   "type": "module",
   "main": "index.js",
+  "bin": {
+    "on-premise-bundle": "node index.js"
+  },
   "scripts": {
     "start": "node index"
   },
